@@ -385,6 +385,56 @@ footer.foot{
   line-height:1.45;
   color:var(--ink-2);
 }
+
+/* ---------- inline term tooltip ---------- */
+.term{
+  border-bottom:1px dotted var(--line-strong);
+  cursor:help;
+  position:relative;
+}
+.term::after{
+  content:attr(data-def);
+  position:absolute;
+  left:50%;
+  bottom:calc(100% + 9px);
+  transform:translateX(-50%) translateY(4px);
+  background:var(--ink);
+  color:var(--bg);
+  font-family:"Source Sans 3", sans-serif;
+  font-size:.78rem;
+  font-weight:400;
+  line-height:1.4;
+  padding:.5rem .65rem;
+  border-radius:8px;
+  width:max-content;
+  max-width:200px;
+  white-space:normal;
+  box-shadow:var(--shadow);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .12s ease, transform .12s ease;
+  z-index:20;
+}
+.term::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:calc(100% + 4px);
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:var(--ink);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .12s ease;
+  z-index:20;
+}
+.term:hover::after, .term:focus-visible::after, .term.show::after{
+  opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+}
+.term:hover::before, .term:focus-visible::before, .term.show::before{
+  opacity:1; visibility:visible;
+}
 </style>
 </head>
 <body>
@@ -414,6 +464,7 @@ footer.foot{
         <dl>
           <dt>세미웨스턴 그립</dt><dd>라켓 면이 손바닥보다 아래를 향하는 그립. 탑스핀을 걸기 유리해 포핸드에 많이 쓴다.</dd>
           <dt>콘티넨탈 그립</dt><dd>도끼를 쥐듯 잡는 그립. 서브·발리·슬라이스에 주로 사용한다.</dd>
+          <dt>그립 전환</dt><dd>포핸드·백핸드처럼 스트로크가 바뀔 때 손 안에서 라켓 쥔 방식을 바꾸는 것.</dd>
         </dl>
       </div>
       <div class="glossary-group">
@@ -448,6 +499,7 @@ footer.foot{
           <dt>레그드라이브</dt><dd>무릎을 굽혔다 펴며 그 힘을 서브 파워로 전달하는 동작.</dd>
           <dt>킥서브</dt><dd>공을 위에서 아래로 강하게 브러싱해 바운스 후 높이 튀어오르게 하는 서브.</dd>
           <dt>세컨서브</dt><dd>첫 서브가 실패했을 때 넣는 두 번째 서브. 보통 더 안전하게 구사한다.</dd>
+          <dt>오버헤드 스매시</dt><dd>머리 위로 뜬 공을 강하게 내리치는 샷.</dd>
         </dl>
       </div>
       <div class="glossary-group">
@@ -700,6 +752,48 @@ const WEEKS = [
   ]},
 ];
 
+const TERM_DEFS = {
+  '세미웨스턴': '라켓 면이 손바닥보다 아래를 향하는 그립. 탑스핀을 걸기 유리해 포핸드에 많이 쓴다.',
+  '콘티넨탈 그립': '도끼를 쥐듯 잡는 그립. 서브·발리·슬라이스에 주로 사용한다.',
+  '그립 전환': '포핸드·백핸드처럼 스트로크가 바뀔 때 손 안에서 라켓 쥔 방식을 바꾸는 것.',
+  '유닛턴': '공이 오는 순간 어깨와 상체를 함께 돌려 백스윙을 준비하는 동작.',
+  '스플릿스텝': '상대가 공을 치는 순간 가볍게 뛰어 착지하며 다음 방향으로 빠르게 반응하는 준비 동작.',
+  '레디포지션': '라켓을 몸 중앙에 들고 무릎을 살짝 굽힌 대기 자세.',
+  '크로스오버 스텝': '한쪽 발이 다른 쪽 발 앞을 가로질러 빠르게 이동하는 스텝.',
+  '리커버리': '샷을 친 후 다음 샷을 위해 유리한 위치로 돌아오는 움직임.',
+  '컨택포인트': '라켓과 공이 만나는 지점.',
+  '팔로우스루': '임팩트 이후 라켓이 자연스럽게 마무리되는 동작.',
+  '탑스핀': '공 위쪽을 스치듯 쳐서 앞으로 회전을 거는 타법.',
+  '슬라이스': '공 아래를 깎아 쳐서 역회전(언더스핀)을 거는 타법.',
+  '브러싱': '라켓 면이 공 표면을 스치듯 지나가며 회전을 만드는 임팩트 방식.',
+  '크로스코트': '코트를 대각선으로 가로지르는 샷.',
+  '다운더라인': '자신이 서있는 쪽 사이드라인을 따라 직선으로 보내는 샷.',
+  '인사이드아웃': '반대쪽 코너로 돌아 들어가 크로스 방향으로 치는 샷.',
+  '토스': '서브를 넣기 위해 공을 위로 띄우는 동작.',
+  '트로피 포지션': '토스 후 팔을 들어 우승 트로피를 든 듯한 자세를 만드는 서브 준비 자세.',
+  '프로네이션': '서브 임팩트 순간 손목과 전완이 안쪽으로 회전하는 동작.',
+  '레그드라이브': '무릎을 굽혔다 펴며 그 힘을 서브 파워로 전달하는 동작.',
+  '킥서브': '공을 위에서 아래로 강하게 브러싱해 바운스 후 높이 튀어오르게 하는 서브.',
+  '세컨서브': '첫 서브가 실패했을 때 넣는 두 번째 서브. 보통 더 안전하게 구사한다.',
+  '오버헤드 스매시': '머리 위로 뜬 공을 강하게 내리치는 샷.',
+  '랠리': '공이 오가며 이어지는 주고받기.',
+  '어프로치샷': '네트로 다가가기 위해 치는 깊고 낮은 샷.',
+  '3구 패턴': '서브(또는 리턴) 이후 세 번째 샷까지 미리 정해둔 흐름으로 포인트를 만드는 전술.',
+};
+const TERM_REGEX = new RegExp(
+  Object.keys(TERM_DEFS)
+    .sort((a, b) => b.length - a.length)
+    .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|'),
+  'g'
+);
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function annotate(text){
+  return text.replace(TERM_REGEX, m => `<span class="term" tabindex="0" data-def="${escapeHtml(TERM_DEFS[m])}">${m}</span>`);
+}
+
 const STORAGE_KEY = 'baseline-rebuild-v1';
 const WEEK_KEY = 'baseline-rebuild-week';
 let checked = {};
@@ -773,7 +867,7 @@ function renderWeekDetail(){
 
   const head = document.createElement('div');
   head.className = 'week-head';
-  head.innerHTML = `<div class="phase-tag">${phase.name}</div><h2>${week.week}주차 · ${week.focus}</h2><p class="goal">${week.goal}</p>`;
+  head.innerHTML = `<div class="phase-tag">${phase.name}</div><h2>${week.week}주차 · ${annotate(week.focus)}</h2><p class="goal">${annotate(week.goal)}</p>`;
   el.appendChild(head);
 
   const grid = document.createElement('div');
@@ -791,7 +885,7 @@ function renderWeekDetail(){
         <span class="day-num">Day ${day.day}</span>
         ${day.bonus ? '<span class="bonus-badge">보너스</span>' : ''}
       </div>
-      <h3>${day.title}</h3>
+      <h3>${annotate(day.title)}</h3>
       <div class="day-progress mono">${stats.done}/${stats.total} 완료</div>
     `;
     card.appendChild(headEl);
@@ -809,7 +903,7 @@ function renderWeekDetail(){
         const isChecked = !!checked[id];
         const label = document.createElement('label');
         label.className = 'item' + (isChecked ? ' done' : '');
-        label.innerHTML = `<input type="checkbox" ${isChecked ? 'checked' : ''}><span class="box"></span><span class="txt">${text}</span>`;
+        label.innerHTML = `<input type="checkbox" ${isChecked ? 'checked' : ''}><span class="box"></span><span class="txt">${annotate(text)}</span>`;
         const input = label.querySelector('input');
         input.addEventListener('change', () => {
           checked[id] = input.checked;
@@ -850,6 +944,15 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     checked = {};
     save();
     renderAll();
+  }
+});
+
+document.addEventListener('click', (e) => {
+  const term = e.target.closest('.term');
+  document.querySelectorAll('.term.show').forEach(el => { if(el !== term) el.classList.remove('show'); });
+  if(term){
+    e.preventDefault();
+    term.classList.toggle('show');
   }
 });
 
