@@ -324,6 +324,67 @@ footer.foot{
 @media (prefers-reduced-motion: reduce){
   *{ transition:none !important; }
 }
+
+/* ---------- glossary ---------- */
+.glossary{ margin-bottom:1.6rem; }
+.glossary summary{
+  cursor:pointer;
+  font-family:"Barlow Condensed", sans-serif;
+  font-weight:600;
+  font-size:.85rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--accent-ink);
+  padding:.5rem 0;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.glossary summary::-webkit-details-marker{ display:none; }
+.glossary summary::before{
+  content:"+";
+  display:inline-flex;
+  width:16px;height:16px;
+  flex-shrink:0;
+  align-items:center;justify-content:center;
+  border:1px solid var(--line-strong);
+  border-radius:4px;
+  font-size:.85rem;
+  color:var(--ink-2);
+}
+.glossary[open] summary::before{ content:"\2212"; }
+.glossary summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.glossary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:1.4rem;
+  padding:.5rem 0 1.2rem;
+  border-bottom:1px solid var(--line);
+}
+.glossary-group h4{
+  font-family:"Barlow Condensed", sans-serif;
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin:0 0 .55rem;
+}
+.glossary-group dl{ margin:0; }
+.glossary-group dt{
+  font-weight:600;
+  font-size:.88rem;
+  color:var(--ink);
+  margin-top:.6rem;
+}
+.glossary-group dt:first-child{ margin-top:0; }
+.glossary-group dd{
+  margin:.15rem 0 0;
+  font-size:.85rem;
+  line-height:1.45;
+  color:var(--ink-2);
+}
 </style>
 </head>
 <body>
@@ -344,6 +405,61 @@ footer.foot{
   </header>
 
   <div class="phase-legend" id="phaseLegend"></div>
+
+  <details class="glossary">
+    <summary>용어 설명 보기</summary>
+    <div class="glossary-grid">
+      <div class="glossary-group">
+        <h4>그립</h4>
+        <dl>
+          <dt>세미웨스턴 그립</dt><dd>라켓 면이 손바닥보다 아래를 향하는 그립. 탑스핀을 걸기 유리해 포핸드에 많이 쓴다.</dd>
+          <dt>콘티넨탈 그립</dt><dd>도끼를 쥐듯 잡는 그립. 서브·발리·슬라이스에 주로 사용한다.</dd>
+        </dl>
+      </div>
+      <div class="glossary-group">
+        <h4>준비자세 · 풋워크</h4>
+        <dl>
+          <dt>유닛턴</dt><dd>공이 오는 순간 어깨와 상체를 함께 돌려 백스윙을 준비하는 동작.</dd>
+          <dt>스플릿스텝</dt><dd>상대가 공을 치는 순간 가볍게 뛰어 착지하며 다음 방향으로 빠르게 반응하는 준비 동작.</dd>
+          <dt>레디포지션</dt><dd>라켓을 몸 중앙에 들고 무릎을 살짝 굽힌 대기 자세.</dd>
+          <dt>크로스오버 스텝</dt><dd>한쪽 발이 다른 쪽 발 앞을 가로질러 빠르게 이동하는 스텝.</dd>
+          <dt>리커버리</dt><dd>샷을 친 후 다음 샷을 위해 유리한 위치로 돌아오는 움직임.</dd>
+        </dl>
+      </div>
+      <div class="glossary-group">
+        <h4>스트로크</h4>
+        <dl>
+          <dt>컨택포인트</dt><dd>라켓과 공이 만나는 지점.</dd>
+          <dt>팔로우스루</dt><dd>임팩트 이후 라켓이 자연스럽게 마무리되는 동작.</dd>
+          <dt>탑스핀</dt><dd>공 위쪽을 스치듯 쳐서 앞으로 회전을 거는 타법.</dd>
+          <dt>슬라이스</dt><dd>공 아래를 깎아 쳐서 역회전(언더스핀)을 거는 타법.</dd>
+          <dt>브러싱</dt><dd>라켓 면이 공 표면을 스치듯 지나가며 회전을 만드는 임팩트 방식.</dd>
+          <dt>크로스코트</dt><dd>코트를 대각선으로 가로지르는 샷.</dd>
+          <dt>다운더라인</dt><dd>자신이 서있는 쪽 사이드라인을 따라 직선으로 보내는 샷.</dd>
+          <dt>인사이드아웃</dt><dd>반대쪽 코너로 돌아 들어가 크로스 방향으로 치는 샷.</dd>
+        </dl>
+      </div>
+      <div class="glossary-group">
+        <h4>서브 · 스매시</h4>
+        <dl>
+          <dt>토스</dt><dd>서브를 넣기 위해 공을 위로 띄우는 동작.</dd>
+          <dt>트로피 포지션</dt><dd>토스 후 팔을 들어 우승 트로피를 든 듯한 자세를 만드는 서브 준비 자세.</dd>
+          <dt>프로네이션</dt><dd>서브 임팩트 순간 손목과 전완이 안쪽으로 회전하는 동작.</dd>
+          <dt>레그드라이브</dt><dd>무릎을 굽혔다 펴며 그 힘을 서브 파워로 전달하는 동작.</dd>
+          <dt>킥서브</dt><dd>공을 위에서 아래로 강하게 브러싱해 바운스 후 높이 튀어오르게 하는 서브.</dd>
+          <dt>세컨서브</dt><dd>첫 서브가 실패했을 때 넣는 두 번째 서브. 보통 더 안전하게 구사한다.</dd>
+        </dl>
+      </div>
+      <div class="glossary-group">
+        <h4>전술 · 랠리</h4>
+        <dl>
+          <dt>랠리</dt><dd>공이 오가며 이어지는 주고받기.</dd>
+          <dt>어프로치샷</dt><dd>네트로 다가가기 위해 치는 깊고 낮은 샷.</dd>
+          <dt>3구 패턴</dt><dd>서브(또는 리턴) 이후 세 번째 샷까지 미리 정해둔 흐름으로 포인트를 만드는 전술.</dd>
+        </dl>
+      </div>
+    </div>
+  </details>
 
   <nav class="week-rail" id="weekRail"></nav>
 
